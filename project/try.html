@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Savate:ital,wght@0,200..900;1,200..900&display=swap');
+
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Savate:ital,wght@0,200..900;1,200..900&display=swap');
+
+    @import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Savate:ital,wght@0,200..900;1,200..900&display=swap');
+
+    *
+    {
+      margin: 0;
+      padding: 0;
+    }
+    body
+    {
+      width: 100%;
+      box-sizing: border-box;
+      /* background-color: bisque; */
+    }
+    .navbar {
+      border: 2px solid #999;
+      border-radius: 10px;
+      padding: 0.5rem;
+      position: relative;
+      top: 15px;
+    }
+
+    /* .navbar-nav {
+      margin: 0 auto;
+    } */
+      .navbar-brand 
+    {
+      width: 100%;
+      position: relative;
+    }
+    .navbar-brand img
+    {
+      width: 80px;
+      position: absolute;
+      border: 2px solid #e91e63;
+      border-radius: 50%;
+    }
+    
+.hover-image {
+    /* width: 300px;
+    height: auto; */
+    transition: transform 0.3s ease;
+}
+    .image-container {
+    display: inline-block;
+    overflow: hidden;
+}
+
+    #icon-result {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-top: 30px;
+      color: #444;
+    }
+
+    .navbar-brand {
+    padding-top:0;
+    padding-bottom: 0;
+    margin-right:0;
+    /* font-size: var(--bs-navbar-brand-font-size); */
+    /* color: var(--bs-navbar-brand-color); */
+    text-decoration: none;
+    white-space: nowrap;
+}
+  nav .logo
+  {
+    width: 100%;
+    position: relative;
+    left: 90px;
+  }
+    .text-shop {
+      color: #e91e63 !important;
+      font-weight: bold;
+    }
+
+    .text-shop:hover {
+      color: #c2185b !important;
+    }
+
+
+    #myimg{
+    cursor:pointer;
+    transition: 0.3s;
+    display: block;
+    /* margin-left: auto;
+    margin-right: auto; */
+   } 
+
+   .modal{
+    display: none;
+    position: fixed;
+    z-index: 99;
+    padding: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0,);
+    background-color: rgba(0,0,0,0);
+   }
+
+   .model-content{
+    margin: auto;
+    display: block;
+    width: 75%;
+   }
+
+   #caption{
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #999;
+    padding: 10px 0;
+    height: 150px;
+   }
+
+   @-webkit-keyframes zoom-out{
+    from{transform: scale(1);}
+    to{transform: scale(0);}
+   }
+
+   @keyframes zoom-out{
+    from{transform: scale(1);}
+    to{transform: scale(0);}
+   }
+  
+   .model-content, #caption{
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+   }
+
+   .out{
+    animation-name: zoom-out;
+    animation-duration: 0.6s;                                           
+   }
+
+
+
+   
+    </style>
+
+
+
+<body>
+    
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid all">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+  <!-- <i class="fa-solid fa-house-user me-2"></i> -->
+   
+   <img id="myimg" src="./image/logo.jpg" alt="" style="width: 80px;">  <div class="logo">
+      <span class="fw-bold">
+        Happy <span class="text-shop">Shop</span>
+      </span>
+  </div>
+</a>
+
+
+   <div id="mymodel" class="model">
+    <a href=""><img class="modal-content" id="img01"></a>
+    <div id="caption"></div>
+    </div>
+  
+
+  
+
+
+
+   <script>
+
+     var modal=document.getElementById('mymodel');
+
+     var img=document.getElementById('myimg');
+     var modalImg=document.getElementById('img01');
+     var captionText=document.getElementById("caption");
+     img.onclick=function(){
+         modal.style.display="block";
+         modalImg.src=this.src;
+         modalImg.alt=this.alt;
+         captionText.innerHTML=this.alt;
+     }
+
+     model.onclick=function(){
+      img01.classname+="out";
+      setTimeout(function(){
+        modal.style.display="none";
+        img01.classname="model-content";
+      }, 500);
+     }
+
+   </script>
+
+
+ 
+
+   
+</a>
+
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Craft</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-shop" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+              Shop
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">Female</a></li>
+              <li><a class="dropdown-item" href="#">Male</a></li>
+              <li><a class="dropdown-item" href="#">Kids</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          </li>
+        </ul>
+
+        <form class="d-flex ms-auto" onsubmit="searchNavbarItem(event)">
+          <input id="iconSearch" class="form-control me-2" type="search" placeholder="Search navbar item" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+    
+  </nav>
+
+
+
+</body>
+</html>

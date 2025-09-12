@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MicroBlog App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f8ff;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-around;
+      background-color: #1da1f2;
+      padding: 15px 0;
+      color: white;
+      font-weight: bold;
+    }
+
+    .navbar div {
+      cursor: pointer;
+      transition: background 0.3s;
+      padding: 10px 15px;
+    }
+
+    .navbar div:hover {
+      background-color: #0d8ddb;
+      border-radius: 8px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    textarea {
+      width: 100%;
+      height: 70px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      resize: none;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #1da1f2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .post {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .username {
+      font-weight: bold;
+      color: #1da1f2;
+    }
+
+    .content {
+      margin: 5px 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .like-btn {
+      color: #ff4c4c;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div onclick="showPage('postPage')">Post</div>
+    <div onclick="showPage('followPage')">Follow</div>
+    <div onclick="showPage('likePage')">Like</div>
+  </div>
+
+  <!-- Post Page -->
+  <div id="postPage" class="container">
+    <h2>My Posts</h2>
+    <form id="postForm">
+      <textarea id="postContent" placeholder="What's happening?"></textarea><br>
+      <button type="submit">Post</button>
+    </form>
+    <div id="myPosts"></div>
+  </div>
+
+  <!-- Follow Page -->
+  <div id="followPage" class="container hidden">
+    <h2>Following</h2>
+    <div id="followFeed"></div>
+  </div>
+
+  <!-- Like Page -->
+  <div id="likePage" class="container hidden">
+    <h2>Liked Posts</h2>
+    <div id="likedFeed"></div>
+  </div>
+
+  <script>
+    const currentUser = "alice";
+    const following = ["bob", "charlie"]; // users alice follows
+    const posts = [
+      { username: "bob", content: "Hello from Bob!" },
+      { username: "charlie", content: "Charlie checking in." },
+      { username: "alice", content: "Welcome to my microblog!" }
+    ];
+
+    let likedPosts = [];
+
+    const postForm = document.getElementById("postForm");
+    const postContent = document.getElementById("postContent");
+    const myPostsDiv = document.getElementById("myPosts");
+    const followFeedDiv = document.getElementById("followFeed");
+    const likedFeedDiv = document.getElementById("likedFeed");
+
+    // View switching
+    function showPage(pageId) {
+      document.getElementById("postPage").classList.add("hidden");
+      document.getElementById("followPage").classList.add("hidden");
+      document.getElementById("likePage").classList.add("hidden");
+      document.getElementById(pageId).classList.remove("hidden");
+
+      if (pageId === 'followPage') renderFollowFeed();
+      if (pageId === 'likePage') renderLikedFeed();
+    }
+
+    // Render user's own posts
+    function renderMyPosts() {
+      myPostsDiv.innerHTML = "";
+      const userPosts = posts.filter(p => p.username === currentUser).reverse();
+      userPosts.forEach(post => {
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `
+          <div class="username">@${post.username}</div>
+          <div class="content">${post.content}</div>
+          <div class="like-btn" onclick="likePost(${posts.indexOf(post)})">❤️ Like</div>
+        `;
+        myPostsDiv.appendChild(div);
+      });
+    }
+
+    // Render followed users' posts
+    function renderFollowFeed() {
+      followFeedDiv.innerHTML = "";
+      const followPosts = posts.filter(p => following.includes(p.username)).reverse();
+      followPosts.forEach(post => {
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `
+          <div class="username">@${post.username}</div>
+          <div class="content">${post.content}</div>
+          <div class="like-btn" onclick="likePost(${posts.indexOf(post)})">❤️ Like</div>
+        `;
+        followFeedDiv.appendChild(div);
+      });
+    }
+
+    // Render liked posts
+    function renderLikedFeed() {
+      likedFeedDiv.innerHTML = "";
+      const liked = likedPosts.map(index => posts[index]).reverse();
+      liked.forEach(post => {
+        const div = document.createElement("div");
+        div.className = "post";
+        div.innerHTML = `
+          <div class="username">@${post.username}</div>
+          <div class="content">${post.content}</div>
+        `;
+        likedFeedDiv.appendChild(div);
+      });
+    }
+
+    // Like a post (by index in `posts`)
+    function likePost(index) {
+      if (!likedPosts.includes(index)) {
+        likedPosts.push(index);
+        alert("Post liked!");
+      } else {
+        alert("You already liked this post.");
+      }
+    }
+
+    // Handle post form submission
+    postForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const content = postContent.value.trim();
+      if (content) {
+        posts.push({ username: currentUser, content });
+        postContent.value = "";
+        renderMyPosts();
+      }
+    });
+
+    // Initial render
+    renderMyPosts();
+  </script>
+
+</body>
+</html>

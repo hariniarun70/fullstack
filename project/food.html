@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Delivery App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #ff5722;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    nav {
+      background: #fff3e0;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav button {
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      background: #ff9800;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ddd;
+    }
+
+    .restaurant, .menu-item {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .menu-item button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #cart {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f1f8e9;
+      border: 1px solid #c5e1a5;
+      border-radius: 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0;
+    }
+
+    #placeOrder {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #ff5722;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>🍕 FoodieFast - Online Food Delivery</header>
+
+  <nav>
+    <button onclick="showPage('home')">Restaurants</button>
+    <button onclick="showPage('cartPage')">Cart</button>
+  </nav>
+
+  <div class="container" id="home">
+    <h2>Select a Restaurant</h2>
+    <div id="restaurantList"></div>
+  </div>
+
+  <div class="container hidden" id="menuPage">
+    <h2 id="menuTitle">Menu</h2>
+    <div id="menuList"></div>
+    <button onclick="showPage('home')">← Back to Restaurants</button>
+  </div>
+
+  <div class="container hidden" id="cartPage">
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <button id="placeOrder">Place Order</button>
+    <div id="orderMessage"></div>
+  </div>
+
+  <script>
+    const restaurants = [
+      {
+        name: "Pizza Palace",
+        menu: [
+          { item: "Margherita Pizza", price: 8 },
+          { item: "Pepperoni Pizza", price: 10 },
+          { item: "Veggie Pizza", price: 9 }
+        ]
+      },
+      {
+        name: "Burger House",
+        menu: [
+          { item: "Cheeseburger", price: 6 },
+          { item: "Veggie Burger", price: 5 },
+          { item: "Fries", price: 3 }
+        ]
+      },
+      {
+        name: "Sushi World",
+        menu: [
+          { item: "California Roll", price: 12 },
+          { item: "Tuna Roll", price: 11 },
+          { item: "Miso Soup", price: 4 }
+        ]
+      }
+    ];
+
+    let currentRestaurant = null;
+    let cart = [];
+
+    function showPage(page) {
+      document.getElementById("home").classList.add("hidden");
+      document.getElementById("menuPage").classList.add("hidden");
+      document.getElementById("cartPage").classList.add("hidden");
+
+      document.getElementById(page).classList.remove("hidden");
+
+      if (page === 'cartPage') renderCart();
+    }
+
+    function renderRestaurants() {
+      const list = document.getElementById("restaurantList");
+      list.innerHTML = "";
+      restaurants.forEach((rest, index) => {
+        const div = document.createElement("div");
+        div.className = "restaurant";
+        div.innerHTML = `
+          <strong>${rest.name}</strong><br>
+          <button onclick="viewMenu(${index})">View Menu</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function viewMenu(index) {
+      currentRestaurant = restaurants[index];
+      document.getElementById("menuTitle").innerText = `Menu - ${currentRestaurant.name}`;
+      const menuList = document.getElementById("menuList");
+      menuList.innerHTML = "";
+
+      currentRestaurant.menu.forEach((item, i) => {
+        const div = document.createElement("div");
+        div.className = "menu-item";
+        div.innerHTML = `
+          <strong>${item.item}</strong> - $${item.price}
+          <br>
+          <button onclick="addToCart('${item.item}', ${item.price})">Add to Cart</button>
+        `;
+        menuList.appendChild(div);
+      });
+
+      showPage('menuPage');
+    }
+
+    function addToCart(item, price) {
+      cart.push({ item, price });
+      alert(`${item} added to cart!`);
+    }
+
+    function renderCart() {
+      const cartItems = document.getElementById("cartItems");
+      const orderMessage = document.getElementById("orderMessage");
+      orderMessage.innerHTML = "";
+      cartItems.innerHTML = "";
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = "<p>Your cart is empty.</p>";
+        return;
+      }
+
+      let total = 0;
+      cart.forEach((c, i) => {
+        total += c.price;
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `<span>${c.item} - $${c.price}</span>`;
+        cartItems.appendChild(div);
+      });
+
+      cartItems.innerHTML += `<hr><strong>Total: $${total}</strong>`;
+    }
+
+    document.getElementById("placeOrder").addEventListener("click", () => {
+      if (cart.length === 0) return;
+      document.getElementById("orderMessage").innerHTML = "<p style='color: green;'>✅ Order placed successfully!</p>";
+      cart = [];
+      renderCart();
+    });
+
+    // Initial load
+    renderRestaurants();
+  </script>
+
+</body>
+</html>
